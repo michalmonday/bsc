@@ -9,7 +9,7 @@ import List
 
 --@ \subsubsection{RegFile}
 
---@ This package implements a 5-read-port 1-write-port array module.  RegFiles
+--@ This package implements a 9-read-port 1-write-port array module.  RegFiles
 --@ may be indexed by any type in the \te{Bits} class: since the package uses a
 --@ Verilog primitive module, the actual indexing is done with the bit
 --@ representations; thus the bit representation of the ``lower'' bound must be
@@ -52,7 +52,7 @@ vMkRegFile lo hi =
     module verilog "RegFile" (("addr_width",valueOf i), ("data_width",valueOf a),
                               ("lo",lo), ("hi",hi)) "CLK" {
         upd    = "ADDR_IN" "D_IN"{reg} "WE";
-        sub[5] = "ADDR" "D_OUT";
+        sub[9] = "ADDR" "D_OUT";
     } [ sub < upd, sub <> sub, upd >< upd ]
 
 saveRegFilePortTypes :: VRegFile ni na -> Type -> Type -> Module ()
@@ -63,7 +63,7 @@ saveRegFilePortTypes _a val_type idx_type = do
   let saveSub n = do let s = integerToString n
                      primSavePortType name ("ADDR_" +++ s) idx_type
                      primSavePortType name ("D_OUT_" +++ s) val_type
-  mapM saveSub (upto 1 5)
+  mapM saveSub (upto 1 9)
   return ()
 
 --@ \begin{libverbatim}
@@ -126,7 +126,7 @@ vMkRegFileWCF lo hi =
     module verilog "RegFile" (("addr_width",valueOf i), ("data_width",valueOf a),
                               ("lo",lo), ("hi",hi)) "CLK" {
         upd    = "ADDR_IN" "D_IN"{reg} "WE";
-        sub[5] = "ADDR" "D_OUT";
+        sub[9] = "ADDR" "D_OUT";
     } [ upd <> sub, sub <> sub, upd >< upd]
 
 --@ An array which for which the reads and the write are conflict-free.  For
@@ -161,7 +161,7 @@ vMkRegFileLoad isBin file lo hi =
       (("file", file), ("addr_width",valueOf i), ("data_width",valueOf a),
        ("lo",lo), ("hi",hi), ("binary",pack isBin)) "CLK" {
         upd    = "ADDR_IN" "D_IN"{reg} "WE";
-        sub[5] = "ADDR" "D_OUT";
+        sub[9] = "ADDR" "D_OUT";
     } [ sub < upd, sub <> sub, upd >< upd ]
 
 --@ \begin{libverbatim}
@@ -193,7 +193,7 @@ vMkRegFileWCFLoad isBin file lo hi =
       (("file", file), ("addr_width",valueOf i), ("data_width",valueOf a),
        ("lo",lo), ("hi",hi), ("binary",pack isBin)) "CLK" {
         upd    = "ADDR_IN" "D_IN"{reg} "WE";
-        sub[5] = "ADDR" "D_OUT";
+        sub[9] = "ADDR" "D_OUT";
     } [ upd <> sub, sub <> sub, upd >< upd ]
 
 --@ \begin{libverbatim}
